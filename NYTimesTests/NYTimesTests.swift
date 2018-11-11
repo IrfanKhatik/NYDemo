@@ -62,9 +62,12 @@ class NYTimesTests: XCTestCase {
     }
     
     func testRomanConvertorForExceededMaxBoundaryValue() {
-        let number = RomanNumber(value: 5000)
+        let number = RomanNumber(value: 4999)
         let str = number.convert()
         XCTAssertEqual("MMM", str)
+        // 4999 equivalent Roman value is "MMMMCMXCIX"
+        // But this value exceeding our current max value
+        XCTAssertNotEqual("MMMMCMXCIX", str)
     }
     
     func testRomanConverterPerformance() {

@@ -14,6 +14,19 @@ We'll be using the most viewed section of this [API].
 - Implemented roman convertor (1 to 3000)
 - Added unit test cases
 
+## How to run tests
+1] Open Sample App in Xcode
+2] Select Simulator at device to build
+3] Select Project hierarchy 
+4] Open Dropdown at NYTimesTests folder
+5] Select NYTimesTests.swift XCTests class
+6] There are three ways to run the test class:
+    a] Product\Test or Command-U. This actually runs all test classes.
+    b] Click the arrow button in the test navigator.
+    c] Click the diamond button in the gutter.
+    
+Also enabled code coverage in current scheme.
+
 ### Tech
 
 NYTimes uses a number of open source projects to work properly:
