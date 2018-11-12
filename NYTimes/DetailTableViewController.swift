@@ -34,16 +34,16 @@ class DetailTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.title = "NY Post Detail"
-        if selectedPost.desc.count > 0 {
-            self.lblDesc.text = selectedPost.desc
+        if let title = selectedPost.title {
+            self.lblDesc.text = title
         }
         
-        if selectedPost.author.count > 0 {
-            self.lblAuthor.text = selectedPost.author
+        if let byline = selectedPost.byline {
+            self.lblAuthor.text = byline
         }
         
-        if selectedPost.dateTime.count > 0 {
-            self.lblDate.text = selectedPost.dateTime
+        if let published_date = selectedPost.published_date {
+            self.lblDate.text = published_date
         }
         
         if let postImage = selectedPostImage {
@@ -51,8 +51,8 @@ class DetailTableViewController: UITableViewController {
             self.imgNYPost.layer.cornerRadius = self.imgNYPost.bounds.size.height / 2;
             self.imgNYPost.layer.masksToBounds = true;
         } else {
-            if selectedPost.imagePath.count > 0 {
-                guard let url = URL(string:selectedPost.imagePath) else {
+            if let imagePath = selectedPost.media?.first?.metadata?.first?.url {
+                guard let url = URL(string:imagePath) else {
                     self.tableView.reloadData()
                     return
                 }

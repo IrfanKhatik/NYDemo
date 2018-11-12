@@ -28,11 +28,23 @@ extension NYRequestType {
             request: self.data,
             onSuccess: { (responseData: Data) in
                 do {
-                    let jsonDecoder = JSONDecoder()
-                    let result = try jsonDecoder.decode(NYResponseType.self, from: responseData)
-                    DispatchQueue.main.async {
-                        onSuccess(result)
+                    if let jsonObject = try? JSONSerialization.jsonObject(with: responseData, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any] {
+                        guard let status = jsonObject["status"] as? String, status == "OK" else {
+                            onError(NYNetworkError.noData)
+                            return
+                        }
+                        
+                        if let results = jsonObject["results"] as? [[String:Any]] {
+                            let resultData = try? JSONSerialization.data(withJSONObject:results)
+                            let jsonDecoder = JSONDecoder()
+                            let result = try jsonDecoder.decode(NYResponseType.self, from: resultData!)
+                            DispatchQueue.main.async {
+                                onSuccess(result)
+                                return
+                            }
+                        }
                     }
+                    
                 } catch let error {
                     DispatchQueue.main.async {
                         onError(error)

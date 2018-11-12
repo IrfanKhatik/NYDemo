@@ -9,19 +9,45 @@
 import UIKit
 
 struct NYPost: Codable {
-    let id: Int
-    let desc: String
-    let author: String
-    let dateTime: String
-    let imagePath: String
+    let id: Int?
+    let source: String?
+    let title: String?
+    let abstract: String?
+    let byline: String?
+    let published_date: String?
+    let media: [NYPostMedia]?
     
-    //Custom Keys
     enum CodingKeys: String, CodingKey {
         case id
-        case desc
-        case author
-        case dateTime
-        case imagePath
+        case source
+        case title
+        case abstract
+        case byline
+        case published_date
+        case media
+    }
+}
+
+struct NYPostMedia: Codable {
+    let type: String?
+    let subtype: String?
+    let caption: String?
+    let copyright: String?
+    let metadata: [NYPostMediaMetaData]?
+    
+    enum CodingKeys: String, CodingKey {
+        case type, subtype, caption, copyright, metadata = "media-metadata"
+    }
+}
+
+struct NYPostMediaMetaData: Codable {
+    let url: String?
+    let format: String?
+    let height: Int?
+    let width: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case url, format, height, width
     }
 }
 
@@ -40,7 +66,7 @@ struct NYK {
 struct GetNYPosts: NYRequestType {
     typealias NYResponseType = [NYPost]
     var data: NYRequestData {
-        return NYRequestData(path: "http://api.nytimes.com/svc/mostpopular/v2/mostviewed/"+"\(NYK.Sections.All)"+"/"+"\(NYK.Period.week)"+".json?apikey=sample-key")
+        return NYRequestData(path: "http://api.nytimes.com/svc/mostpopular/v2/mostviewed/"+"\(NYK.Sections.All)"+"/"+"\(NYK.Period.week)"+".json?apikey=1d9ed0e2b31c4a32b1df123e04791be0")
     }
 }
 
@@ -63,8 +89,8 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         tblNYPosts.rowHeight = UITableView.automaticDimension
         tblNYPosts.estimatedRowHeight = 90
-        //fetchAPI()
-        
+        fetchAPI()
+        /*
         // For testing...
         let post1 = NYPost(id: 1,
                            desc: "Its my NY post and first demo for Excercise 1.",
@@ -81,6 +107,7 @@ class ViewController: UIViewController {
         nyPosts.append(post1)
         nyPosts.append(post2)
         self.tblNYPosts.reloadData()
+        */
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -100,14 +127,17 @@ class ViewController: UIViewController {
     func fetchAPI() {
         GetNYPosts().execute(onSuccess: {[weak self] (NYPosts : [NYPost]) in
             if let strongSelf = self {
+                strongSelf.nyPosts = NYPosts
                 strongSelf.imageCache.removeAllObjects()
                 strongSelf.tblNYPosts.reloadData()
             }
-            print("\(NYPosts)")
-            
-        }) { (error: Error) in
-            //
-            print("\(error.localizedDescription)")
+        }) {[weak self] (error: Error) in
+            if let strongSelf = self {
+                let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                alertController.addAction(cancelAction)
+                strongSelf.present(alertController, animated: true, completion: nil)
+            }
         }
     }
     
@@ -124,7 +154,7 @@ class ViewController: UIViewController {
     
     func filterContentForSearchText(_ searchText: String, scope: String = "All") {
         filteredNYPosts = nyPosts.filter({( post : NYPost) -> Bool in
-            return post.desc.lowercased().contains(searchText.lowercased())
+            return (post.title?.lowercased().contains(searchText.lowercased()))!
         })
         tblNYPosts.reloadData()
     }
@@ -155,16 +185,15 @@ extension ViewController: UITableViewDelegate {
             selectedPost = nyPosts[indexPath.row]
         }
         
-        if let imagePath = selectedPost?.imagePath {
-            guard let url = URL(string:imagePath) else {
-                self.performSegue(withIdentifier:NYDetailPostSegueIndentifier, sender: self)
-                return
-            }
-            
-            if let cachedImage = imageCache.object(forKey: NSString(string: (url.lastPathComponent))) {
-                selectedPostImage = cachedImage
-            }
+        guard let id = selectedPost?.id else {
+            self.performSegue(withIdentifier:NYDetailPostSegueIndentifier, sender: self)
+            return
         }
+        
+        if let cachedImage = imageCache.object(forKey: NSString(string: String(id))) {
+            selectedPostImage = cachedImage
+        }
+        
         self.performSegue(withIdentifier:NYDetailPostSegueIndentifier, sender: self)
     }
 }
@@ -187,24 +216,28 @@ extension ViewController: UITableViewDataSource {
             post = nyPosts[indexPath.row]
         }
         
-        if post.desc.count > 0 {
-            cell.lblDesc.text = post.desc
+        if let title = post.title {
+            cell.lblDesc.text = title
         }
         
-        if post.author.count > 0 {
-            cell.lblAuthor.text = post.author
+        if let byline = post.byline {
+            cell.lblAuthor.text = byline
         }
         
-        if post.dateTime.count > 0 {
-            cell.lblDate.text = post.dateTime
+        if let published_date = post.published_date {
+            cell.lblDate.text = published_date
         }
-        
-        if post.imagePath.count > 0 {
-            guard let url = URL(string:post.imagePath) else {
+        cell.imgNYPost.image = UIImage()
+        if let imagePath = post.media?.first?.metadata?.first?.url {
+            guard let url = URL(string:imagePath) else {
                 return cell
             }
             
-            if let cachedImage = imageCache.object(forKey: NSString(string: (url.lastPathComponent))) {
+            guard let id = post.id else {
+                return cell
+            }
+            
+            if let cachedImage = imageCache.object(forKey: NSString(string: String(id))) {
                 cell.imgNYPost.image = cachedImage
             } else {
                 // Download image into background thread and set it once downloads completed
@@ -216,7 +249,7 @@ extension ViewController: UITableViewDataSource {
                         DispatchQueue.main.async {
                             // This is not a retain cycle, because self doesn't own DispatchQueue.main.
                             // The block does keep self alive until it is executed, though.
-                            self.imageCache.setObject(image, forKey: NSString(string:(url.lastPathComponent)))
+                            self.imageCache.setObject(image, forKey: NSString(string:String(id)))
                             cell.imgNYPost.image = image
                         }
                     }
