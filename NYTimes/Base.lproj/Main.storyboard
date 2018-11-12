@@ -84,9 +84,9 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="imgNYPost" destination="T86-WH-UWb" id="Kw5-hk-JSM"/>
-                                            <outlet property="lblAuthor" destination="4LX-kt-dss" id="J2u-by-6uq"/>
+                                            <outlet property="lblByline" destination="4LX-kt-dss" id="Efh-lx-1DQ"/>
                                             <outlet property="lblDate" destination="G6v-pv-m5Q" id="Ifo-Cf-JE7"/>
-                                            <outlet property="lblDesc" destination="Upq-Zu-Bhb" id="9ia-9c-bgN"/>
+                                            <outlet property="lblTitle" destination="Upq-Zu-Bhb" id="rpf-db-43N"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -156,7 +156,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="186" id="KFv-I9-94s" userLabel="DescView">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="186" id="KFv-I9-94s" userLabel="TitleView">
                                         <rect key="frame" x="0.0" y="198" width="375" height="186"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KFv-I9-94s" id="l5Y-8r-yHJ">
@@ -178,7 +178,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="157" id="mZt-pO-gfH" userLabel="AuthorView">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="157" id="mZt-pO-gfH" userLabel="BylineView">
                                         <rect key="frame" x="0.0" y="384" width="375" height="157"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mZt-pO-gfH" id="Jyh-5j-V20">
@@ -232,9 +232,9 @@
                     </tableView>
                     <connections>
                         <outlet property="imgNYPost" destination="CNd-Vk-ySd" id="Yvh-wo-4lw"/>
-                        <outlet property="lblAuthor" destination="hRu-fv-tgw" id="Rph-Cl-BOK"/>
+                        <outlet property="lblByline" destination="hRu-fv-tgw" id="hK1-Q0-xsW"/>
                         <outlet property="lblDate" destination="I5f-zc-CGi" id="EAI-51-Jkd"/>
-                        <outlet property="lblDesc" destination="wdV-Jj-Cze" id="ahK-MM-8DJ"/>
+                        <outlet property="lblTitle" destination="wdV-Jj-Cze" id="VXY-AS-E5b"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gn0-jC-PvO" userLabel="First Responder" sceneMemberID="firstResponder"/>

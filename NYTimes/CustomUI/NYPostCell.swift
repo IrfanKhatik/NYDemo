@@ -11,8 +11,8 @@ import UIKit
 class NYPostCell: UITableViewCell {
     
     @IBOutlet weak var imgNYPost: UIImageView!
-    @IBOutlet weak var lblDesc: UILabel!
-    @IBOutlet weak var lblAuthor: UILabel!
+    @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var lblByline: UILabel!
     @IBOutlet weak var lblDate: UILabel!
     
     override func awakeFromNib() {

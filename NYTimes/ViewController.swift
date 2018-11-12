@@ -212,11 +212,11 @@ extension ViewController: UITableViewDataSource {
         }
         
         if let title = post.title {
-            cell.lblDesc.text = title
+            cell.lblTitle.text = title
         }
         
         if let byline = post.byline {
-            cell.lblAuthor.text = byline
+            cell.lblByline.text = byline
         }
         
         if let published_date = post.published_date {

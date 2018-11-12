@@ -14,8 +14,8 @@ class DetailTableViewController: UITableViewController {
     var selectedPostImage: UIImage?
     
     @IBOutlet weak var imgNYPost: UIImageView!
-    @IBOutlet weak var lblDesc: UILabel!
-    @IBOutlet weak var lblAuthor: UILabel!
+    @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var lblByline: UILabel!
     @IBOutlet weak var lblDate: UILabel!
     
     override func viewDidLoad() {
@@ -35,11 +35,11 @@ class DetailTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         self.title = "NY Post Detail"
         if let title = selectedPost.title {
-            self.lblDesc.text = title
+            self.lblTitle.text = title
         }
         
         if let byline = selectedPost.byline {
-            self.lblAuthor.text = byline
+            self.lblByline.text = byline
         }
         
         if let published_date = selectedPost.published_date {
