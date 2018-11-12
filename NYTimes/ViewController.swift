@@ -75,6 +75,7 @@ class ViewController: UIViewController {
     fileprivate let NYPostCellIndentifier = "NYPostCellReuseIdentifier"
     fileprivate let NYDetailPostSegueIndentifier = "NYDetailPostSegueIndentifier"
     
+    var refreshControl = UIRefreshControl()
     @IBOutlet weak var tblNYPosts: UITableView!
     let imageCache = NSCache<NSString, UIImage>()
     
@@ -87,27 +88,13 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(refresh(_:)), for: UIControl.Event.valueChanged)
+        tblNYPosts.addSubview(refreshControl)
+        
         tblNYPosts.rowHeight = UITableView.automaticDimension
         tblNYPosts.estimatedRowHeight = 90
         fetchAPI()
-        /*
-        // For testing...
-        let post1 = NYPost(id: 1,
-                           desc: "Its my NY post and first demo for Excercise 1.",
-                           author: "Irfan Khatik & Sarah Mahmood",
-                           dateTime: "25th Aug 2018",
-                           imagePath: "http://www.imageassets.com/image.png")
-        
-        let post2 = NYPost(id: 1,
-                           desc: "Its my NY post and first demo for Excercise 2.",
-                           author: "Irfan Khatik & Sarah Mahmood",
-                           dateTime: "25th Aug 2018",
-                           imagePath: "http://www.imageassets.com/image.png")
-        
-        nyPosts.append(post1)
-        nyPosts.append(post2)
-        self.tblNYPosts.reloadData()
-        */
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -122,6 +109,12 @@ class ViewController: UIViewController {
         super.viewWillDisappear(animated)
         self.title = ""
     }
+    
+    @objc func refresh(_ sender:AnyObject) {
+        // Code to refresh table view
+        fetchAPI()
+    }
+    
     // Network Call
     
     func fetchAPI() {
@@ -130,9 +123,11 @@ class ViewController: UIViewController {
                 strongSelf.nyPosts = NYPosts
                 strongSelf.imageCache.removeAllObjects()
                 strongSelf.tblNYPosts.reloadData()
+                strongSelf.refreshControl.endRefreshing()
             }
         }) {[weak self] (error: Error) in
             if let strongSelf = self {
+                strongSelf.refreshControl.endRefreshing()
                 let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
                 let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
                 alertController.addAction(cancelAction)
