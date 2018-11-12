@@ -7,10 +7,11 @@ We'll be using the most viewed section of this [API].
 
 # Features!
 
-- List Articles
+- List Articles (with refresh loader)
 - Implemented network call
 - Followed MVC pattern
 - Filter Search
+
 - Implemented roman convertor (1 to 3000)
 - Added unit test cases
 
