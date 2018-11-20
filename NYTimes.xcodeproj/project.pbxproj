@@ -132,7 +132,8 @@
 			children = (
 				0150CCFA21988A6600BA3383 /* RomanCovertor.swift */,
 			);
-			path = Roman;
+			name = Roman;
+			path = ../Roman;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
